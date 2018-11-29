@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from .views import home
+from .views import home, redirect_somewhere
 
 urlpatterns = [
     path('', home, name='home'),
+    path('somewhere/', redirect_somewhere, name='somewhere'),
     path('admin/', admin.site.urls),
 ]
