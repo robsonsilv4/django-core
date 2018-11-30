@@ -21,7 +21,7 @@ from .views import home, redirect_somewhere
 
 urlpatterns = [
     path('', home, name='home'),
-    path('blog/', include('blog.urls')),
+    path('blog/', include('blog.urls', namespace='blog')),
     path('somewhere/', redirect_somewhere, name='somewhere'),
     path('admin/', admin.site.urls),
     # path('blog/', post_model_list_view)
