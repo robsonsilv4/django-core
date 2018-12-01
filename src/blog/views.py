@@ -7,6 +7,7 @@ from .models import PostModel
 from .forms import PostModelForm
 
 
+@login_required()
 def post_model_create_view(request):
     # if request.method == 'POST':
     #     print(request.POST)
@@ -32,6 +33,26 @@ def post_model_create_view(request):
 
     template = 'blog/create-view.html'
 
+    return render(request, template, context)
+
+
+@login_required()
+def post_model_update_view(request, id=None):
+    obj = get_object_or_404(PostModel, id=id)
+
+    form = PostModelForm(request.POST or None, instance=obj)
+    context = {
+        # 'object': obj,
+        'form': form
+    }
+
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        messages.success(request, 'Updated Post!')
+        return HttpResponseRedirect('/blog/{id}'.format(id=obj.id))
+
+    template = 'blog/update-view.html'
     return render(request, template, context)
 
 
