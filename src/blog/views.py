@@ -22,7 +22,8 @@ def post_model_detail_view(request, id=None):
     # else:
     #     obj = qs.first()
 
-    obj = get_object_or_404(PostModel, id=1)
+    obj = get_object_or_404(PostModel, id=id)
+    # print(obj.title)
 
     template = 'blog/detail-view.html'
     context = {'object': obj}
