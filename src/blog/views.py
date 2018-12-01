@@ -7,7 +7,7 @@ from .models import PostModel
 from .forms import PostModelForm
 
 
-@login_required()
+# @login_required()
 def post_model_create_view(request):
     # if request.method == 'POST':
     #     print(request.POST)
@@ -36,7 +36,7 @@ def post_model_create_view(request):
     return render(request, template, context)
 
 
-@login_required()
+# @login_required()
 def post_model_update_view(request, id=None):
     obj = get_object_or_404(PostModel, id=id)
 
@@ -53,6 +53,19 @@ def post_model_update_view(request, id=None):
         return HttpResponseRedirect('/blog/{id}'.format(id=obj.id))
 
     template = 'blog/update-view.html'
+    return render(request, template, context)
+
+
+def post_model_delete_view(request, id=None):
+    obj = get_object_or_404(PostModel, id=id)
+    
+    if request.method == 'POST':
+        obj.delete()
+        messages.success(request, 'Post Deleted!')
+        return HttpResponseRedirect('/blog/')
+
+    context = {'object': obj}
+    template = 'blog/delete-view.html'
     return render(request, template, context)
 
 

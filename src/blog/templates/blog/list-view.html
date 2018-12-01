@@ -7,6 +7,14 @@
     <title>List View</title>
   </head>
   <body>
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+              <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
       <h1>Hello From Template!</h1>
 
       <ul>
