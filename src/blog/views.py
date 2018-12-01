@@ -1,8 +1,38 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import PostModel
+from .forms import PostModelForm
+
+
+def post_model_create_view(request):
+    # if request.method == 'POST':
+    #     print(request.POST)
+    #     form = PostModelForm(request.POST)
+    #     if form.is_valid():
+    #         form.save(commit=False)
+    #         print(form.cleaned_data)
+
+    form = PostModelForm(request.POST or None)
+    context = {
+        'form': form
+    }
+
+    if form.is_valid():
+        obj = form.save(commit=False)
+        # print(obj.title)
+        obj.save()
+        messages.success(request, 'Created a new Blog Post!')
+        context = {
+            'form': PostModelForm()
+        }
+        # return HttpResponseRedirect('/blog/{id}'.format(id=obj.id))
+
+    template = 'blog/create-view.html'
+
+    return render(request, template, context)
 
 
 def post_model_detail_view(request, id=None):

@@ -7,6 +7,17 @@
     <title>Detail View</title>
   </head>
   <body>
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+              <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
       <h1>{{ object.title }}</h1>
+      <p>
+        {{ object.title }}
+      </p>
   </body>
 </html>
