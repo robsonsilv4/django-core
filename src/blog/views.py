@@ -58,7 +58,7 @@ def post_model_update_view(request, id=None):
 
 def post_model_delete_view(request, id=None):
     obj = get_object_or_404(PostModel, id=id)
-    
+
     if request.method == 'POST':
         obj.delete()
         messages.success(request, 'Post Deleted!')
@@ -103,6 +103,43 @@ def post_model_list_view(request):
         'object_list': qs
     }
 
+    return render(request, template, context)
+
+
+def post_model_robust_view(request, id=None):
+    obj = None
+    context = {}
+    success_message = 'A New Post was Created!'
+
+    if id is None:
+        '''OBJ is Could be Created...'''
+        template = 'blog/create-view.html'
+    else:
+        '''OBJ Probally Exists...'''
+        obj = get_object_or_404(PostModel, id=id)
+        success_message = 'A New Post was Created!'
+        context['object'] = obj
+        template = 'blog/detail-view.html'
+        if 'edit' in request.get_full_path():
+            template = 'blog/update-view.html'
+
+        if 'delete' in request.get_full_path():
+            template = 'blog/delete-view.html'
+            if request.method == 'POST':
+                obj.delete()
+                messages.success(request, 'Post Deleted!')
+                return HttpResponseRedirect('/blog/')
+
+    # if 'edit' in request.get_full_path() or 'create' in request.get_full_path():
+        form = PostModelForm(request.POST or None, instance=obj)
+        context['form'] = form
+    if form.is_valid():
+        obj = form.save(commit=False)
+        obj.save()
+        messages.success(request, success_message)
+        if obj is not None:
+            return HttpResponseRedirect('/blog/{id}'.format(id=id))
+        context[form] = PostModelForm()
     return render(request, template, context)
 
 
