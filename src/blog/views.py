@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
 
 from .models import PostModel
 from .forms import PostModelForm
@@ -98,11 +99,19 @@ def post_model_detail_view(request, id=None):
 def post_model_list_view(request):
     qs = PostModel.objects.all()
 
-    template = 'blog/list-view.html'
+    query = request.GET.get('q')
+    if query is not None:
+        # qs = qs.filter(title__icontains=query)
+        qs = qs.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query)
+        )
+
     context = {
         'object_list': qs
     }
 
+    template = 'blog/list-view.html'
     return render(request, template, context)
 
 
