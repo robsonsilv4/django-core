@@ -3,6 +3,7 @@ from django.db import models
 
 
 class PostModel(models.Model):
-    # id = models.AutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     # id = models.IntegerField(primary_key=True)
+    active = models.BooleanField(default=True)  # null=True
     pass
