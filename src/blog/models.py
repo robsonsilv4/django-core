@@ -1,5 +1,6 @@
 from django.db import models
 # from django.db.models import Model
+from django.utils.encoding import smart_text
 
 
 PUBLISH_CHOICES = (
@@ -21,3 +22,6 @@ class PostModel(models.Model):
     class Meta:
         verbose_name = 'Post'
         verbose_name_plural = 'Posts'
+
+    def __str__(self):
+        return smart_text(self.title)
