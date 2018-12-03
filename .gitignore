@@ -1,6 +1,12 @@
+# venv
 bin/
 include/
 lib/
 pip-selfcheck.json
+
+# Django
 src/db.sqlite3
 *.pyc
+
+# KDE
+.directory
