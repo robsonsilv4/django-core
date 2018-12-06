@@ -3,6 +3,8 @@ from django.db.models.signals import pre_save, post_save
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
 from django.utils import timezone
+from django.utils.timesince import timesince
+from datetime import timedelta, datetime, date
 
 from .validators import validate_author_email, validate_robson
 
@@ -51,6 +53,23 @@ class PostModel(models.Model):
 
     def __str__(self):
         return smart_text(self.title)
+
+    @property
+    def age(self):
+        if self.publish == 'publish':
+            now = datetime.now()
+            publish_time = datetime.combine(
+                self.publish_date,
+                datetime.now().min.time()
+            )
+            try:
+                difference = now - publish_time
+            except:
+                return 'Unknown'
+            if difference <= timedelta(minutes=1):
+                return 'Just Now.'
+            return '{time} ago.'.format(time=timesince(publish_time).split(', ')[0])
+        return 'Not Published!'
 
 
 def blog_post_model_pre_save(sender, instance, *args, **kwargs):
