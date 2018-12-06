@@ -36,6 +36,8 @@ class PostModel(models.Model):
         auto_now=False, auto_now_add=False, default=timezone.now)
     author_email = models.EmailField(
         max_length=240, null=True, blank=True, validators=[validate_robson])
+    updated = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         # if not self.slug and self.title:
