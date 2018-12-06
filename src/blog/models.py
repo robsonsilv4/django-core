@@ -18,8 +18,15 @@ class PostModel(models.Model):
     id = models.BigAutoField(primary_key=True)
     # id = models.IntegerField(primary_key=True)
     title = models.CharField(
-        max_length=240, unique=True, verbose_name='Post Title')
-    slug = models.SlugField(null=True, blank=True)
+        max_length=240,
+        unique=True,
+        error_messages={
+            'unique': 'This Title is not unique, try again!'
+        },
+        help_text='Must be a unique Title!',
+        verbose_name='Post Title'
+    )
+    slug = models.SlugField(null=True, blank=True)  # editable=False
     content = models.TextField(null=True, blank=True)
     publish = models.CharField(
         max_length=120, choices=PUBLISH_CHOICES, default='draft')
