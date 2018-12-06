@@ -1,5 +1,5 @@
 from django.db import models
-# from django.db.models import Model
+from django.db.models.signals import pre_save, post_save
 from django.utils.encoding import smart_text
 from django.utils.text import slugify
 from django.utils import timezone
@@ -31,10 +31,8 @@ class PostModel(models.Model):
         max_length=240, null=True, blank=True, validators=[validate_robson])
 
     def save(self, *args, **kwargs):
-        # print('Hello from save!')
-        # self.title = 'Fixed Title'
-        if not self.slug and self.title:
-            self.slug = slugify(self.title)
+        # if not self.slug and self.title:
+        #     self.slug = slugify(self.title)
         super(PostModel, self).save(*args, **kwargs)
 
     class Meta:
@@ -44,3 +42,25 @@ class PostModel(models.Model):
 
     def __str__(self):
         return smart_text(self.title)
+
+
+def blog_post_model_pre_save(sender, instance, *args, **kwargs):
+    print('Before Save...')
+    if not instance.slug and instance.title:
+        instance.slug = slugify(instance.title)
+        instance.save()
+
+
+pre_save.connect(blog_post_model_pre_save, sender=PostModel)
+
+
+def blog_post_model_post_save(sender, instance, created, *args, **kwargs):
+    print('After Save...')
+    print(created)
+    if created:
+        if not instance.slug and instance.title:
+            instance.slug = slugify(instance.title)
+            instance.save()
+
+
+post_save.connect(blog_post_model_post_save, sender=PostModel)
