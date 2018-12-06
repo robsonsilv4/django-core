@@ -16,6 +16,14 @@ PUBLISH_CHOICES = (
 )
 
 
+class PostModelManager(models.Manager):
+    def all(self, *args, **kwargs):
+        qs = super(PostModelManager, self).all(
+            *args, **kwargs).filter(activate=True)
+        print(qs)
+        return qs
+
+
 class PostModel(models.Model):
     id = models.BigAutoField(primary_key=True)
     # id = models.IntegerField(primary_key=True)
@@ -40,6 +48,9 @@ class PostModel(models.Model):
         max_length=240, null=True, blank=True, validators=[validate_robson])
     updated = models.DateTimeField(auto_now=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    objects = PostModelManager()
+    other = PostModelManager()
 
     def save(self, *args, **kwargs):
         # if not self.slug and self.title:
