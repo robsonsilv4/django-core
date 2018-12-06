@@ -1,6 +1,7 @@
 from django.db import models
 # from django.db.models import Model
 from django.utils.encoding import smart_text
+from django.utils.text import slugify
 from django.utils import timezone
 
 from .validators import validate_author_email, validate_robson
@@ -18,6 +19,7 @@ class PostModel(models.Model):
     # id = models.IntegerField(primary_key=True)
     title = models.CharField(
         max_length=240, unique=True, verbose_name='Post Title')
+    slug = models.SlugField(null=True, blank=True)
     content = models.TextField(null=True, blank=True)
     publish = models.CharField(
         max_length=120, choices=PUBLISH_CHOICES, default='draft')
@@ -27,6 +29,13 @@ class PostModel(models.Model):
         auto_now=False, auto_now_add=False, default=timezone.now)
     author_email = models.EmailField(
         max_length=240, null=True, blank=True, validators=[validate_robson])
+
+    def save(self, *args, **kwargs):
+        # print('Hello from save!')
+        # self.title = 'Fixed Title'
+        if not self.slug and self.title:
+            self.slug = slugify(self.title)
+        super(PostModel, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Post'
