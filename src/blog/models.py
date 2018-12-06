@@ -3,6 +3,8 @@ from django.db import models
 from django.utils.encoding import smart_text
 from django.utils import timezone
 
+from .validators import validate_author_email, validate_robson
+
 
 PUBLISH_CHOICES = (
     ('draft', 'Draft'),
@@ -23,6 +25,8 @@ class PostModel(models.Model):
     view_count = models.IntegerField(default=0)
     publish_date = models.DateField(
         auto_now=False, auto_now_add=False, default=timezone.now)
+    author_email = models.EmailField(
+        max_length=240, null=True, blank=True, validators=[validate_robson])
 
     class Meta:
         verbose_name = 'Post'
