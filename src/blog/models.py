@@ -35,6 +35,13 @@ class PostModelManager(models.Manager):
         print(qs)
         return qs
 
+    def get_timeframe(self, date1, date2):
+        qs = self.get_queryset()
+        qs_time_1 = qs.filter(published_date__gte=date1)
+        qs_time_2 = qs_time_1.filter(published_date__lt=date2)
+        # final_qs = (qs_time_1 | qs_time_2).distinct()
+        return qs_time_2
+
 
 class PostModel(models.Model):
     id = models.BigAutoField(primary_key=True)
