@@ -16,10 +16,22 @@ PUBLISH_CHOICES = (
 )
 
 
+class PostModelQuerySet(models.query.QuerySet):
+    def active(self):
+        return self.filter(active=True)
+
+    def post_title_items(self, value):
+        return self.filter(title__icontains=value)
+
+
 class PostModelManager(models.Manager):
+    def get_queryset(self):
+        return PostModelQuerySet(self.model, using=self._db)
+
     def all(self, *args, **kwargs):
-        qs = super(PostModelManager, self).all(
-            *args, **kwargs).filter(activate=True)
+        # qs = super(PostModelManager, self).all(
+        #    *args, **kwargs).active()  # .filter(activate=True)
+        qs = self.get_queryset().active()
         print(qs)
         return qs
 
